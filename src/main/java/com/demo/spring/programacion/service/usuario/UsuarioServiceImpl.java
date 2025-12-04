@@ -132,8 +132,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         String nombre = usuario.getNombre();
         String email = usuario.getEmail();
-        String colorFavorito = usuario.getPerfil().getColorFavorito();
-
+        String colorFavorito = usuario.getPerfil() != null
+                ? usuario.getPerfil().getColorFavorito()
+                : null;
+                
+        //conteo en memoria
         Long cantidadEntradas = usuario.getEntradasDiarias().stream().count();
 
         LocalDate ultimaEntrada = usuario.getEntradasDiarias().stream()
@@ -149,4 +152,5 @@ public class UsuarioServiceImpl implements UsuarioService {
                 ultimaEntrada
         );
     }
+
 }

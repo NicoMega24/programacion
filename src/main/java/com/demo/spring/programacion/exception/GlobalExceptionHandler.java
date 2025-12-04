@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.demo.spring.programacion.dto.errores.ApiError;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +41,25 @@ public class GlobalExceptionHandler {
         log.warn("Error de validacion en {} : {}", request.getRequestURI(), errors);
 
         return ResponseEntity.badRequest().body(apiError);
+    }
+
+    //devuelve 404 si no existe el usuario
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiError> handleEntityNotFound(
+            EntityNotFoundException ex,
+            HttpServletRequest request) {
+
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("Recurso no encontrado")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        log.warn("Recurso no encontrado: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
 
