@@ -132,9 +132,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         String nombre = usuario.getNombre();
         String email = usuario.getEmail();
-        String colorFavorito = usuario.getPerfil() != null
-                ? usuario.getPerfil().getColorFavorito()
-                : null;
+        String colorFavorito;
+            if (usuario.getPerfil() != null) {
+                colorFavorito = usuario.getPerfil().getColorFavorito();
+            } else {
+                colorFavorito = null;
+            }
                 
         //conteo en memoria
         Long cantidadEntradas = usuario.getEntradasDiarias().stream().count();
